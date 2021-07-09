@@ -93,13 +93,15 @@ typedef struct object_u{
 }object_t;
 
 typedef struct obj_node_s{
-    int obj_index;
+    object_t * obj;
     struct obj_node_s * next;
+    struct obj_node_s * prev;
 }obj_node_t;
 
 typedef struct universe_s{
-    object_t objects[C_BUFFER_SIZE];
-    obj_node_t ** obj_map;
+    coordinate_t size;
+    obj_node_t * objects;
+    obj_node_t *** obj_map;
 }universe_t;
 
 #endif

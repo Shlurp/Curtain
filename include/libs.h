@@ -8,5 +8,6 @@
 #include <termios.h>
 #include <unistd.h>
 #include <ctype.h>
+#include <sys/ioctl.h>
 
 #endif

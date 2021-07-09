@@ -54,3 +54,19 @@ void view_keypresses(){
         }
     }
 }
+
+int getwinsize(int * rows, int * cols){
+    struct winsize size = {0};
+    int error_check = 0;
+
+    error_check = ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
+    if(-1 == error_check){
+        goto cleanup;
+    }
+
+    *rows = size.ws_row;
+    *cols = size.ws_col;
+
+cleanup:
+    return error_check;
+}

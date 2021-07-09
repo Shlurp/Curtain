@@ -112,12 +112,6 @@ static inline void free_line(line_t * line){
     }
 }
 
-/**** Miscellaneous functions ****/
-
-int enable_rawmode();
-void view_keypresses();
-void free_obj(object_t * obj);
-
 /**** Input functions ****/
 
 int getinput(textbox_t * textbox);
@@ -145,5 +139,12 @@ static inline int print_obj(object_t * obj){
 
     return return_value;
 }
+
+/**** Miscellaneous functions ****/
+
+int enable_rawmode();
+void view_keypresses();
+void free_obj(object_t * obj);
+int getwinsize(int * rows, int * cols);
 
 #endif
