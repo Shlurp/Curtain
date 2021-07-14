@@ -24,13 +24,13 @@ object_t * init_label(char * text, coordinate_t start, coordinate_t end, color_t
     memcpy(label->obj.label.text, text, tlen+1);
 
     label->object_type = LABEL;
-    label->prev = NULL;
+    label->reprint = true;
 
 cleanup:
     return label;
 }
 
-object_t *  init_rect(coordinate_t start, coordinate_t end, color_t color){
+object_t * init_rect(coordinate_t start, coordinate_t end, color_t color){
     object_t * rectangle = NULL;
 
     rectangle = malloc(sizeof(object_t));
@@ -43,7 +43,7 @@ object_t *  init_rect(coordinate_t start, coordinate_t end, color_t color){
     rectangle->obj.rectangle.end = end;
 
     rectangle->object_type = RECT;
-    rectangle->prev = NULL;
+    rectangle->reprint = true;
 
 cleanup:
     return rectangle;
@@ -78,8 +78,41 @@ object_t * init_textbox(coordinate_t start, coordinate_t end, color_t fg_color, 
     }
 
     textbox->object_type = TEXTBOX;
-    textbox->prev = NULL;
+    textbox->reprint = true;
 
 cleanup:
     return textbox;
+}
+
+object_t * init_button(char * text, coordinate_t start, coordinate_t end, color_t bgcolor, color_t fgcolor, color_t hover_bgcolor, int (*on_click) (void *)){
+    object_t * button = NULL;
+    int tlen = 0;
+
+    button = malloc(sizeof(object_t));
+    if(NULL == button){
+        goto cleanup;
+    }
+
+    tlen = strnlen(text, C_BUFFER_SIZE);
+
+    button->obj.button.bg_color = bgcolor;
+    button->obj.button.fg_color = fgcolor;
+    button->obj.button.hover_bg_color = hover_bgcolor;
+    button->obj.button.hover = false;
+    button->obj.button.start = start;
+    button->obj.button.end = end;
+    button->obj.button.on_click = on_click;
+    button->obj.button.text = malloc(tlen + 1);
+    if(NULL == button->obj.button.text){
+        free(button);
+        button = NULL;
+        goto cleanup;
+    }
+    memcpy(button->obj.button.text, text, tlen+1);
+
+    button->object_type = BUTTON;
+    button->reprint = true;
+
+cleanup:
+    return button;
 }

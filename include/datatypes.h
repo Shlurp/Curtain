@@ -12,7 +12,7 @@ typedef enum key_type_e {KEYTYPES_BEGIN=1000,
                          DELETE,
                          KEYTYPES_END}key_type_t;
 
-typedef enum obj_type_e {LABEL, RECT, TEXTBOX}obj_type_t;
+typedef enum obj_type_e {LABEL, RECT, TEXTBOX, BUTTON}obj_type_t;
 
 typedef struct string_s{
     int num_allocated_blocks;
@@ -78,6 +78,20 @@ typedef struct textbox_s{
     unsigned char position_change : 1;
 }textbox_t;
 
+typedef struct button_s{
+    color_t bg_color;
+    color_t hover_bg_color;
+    color_t fg_color;
+
+    coordinate_t start;
+    coordinate_t end;
+
+    bool hover;
+    char * text;
+
+    int (*on_click)(void *);
+}button_t;
+
 typedef struct object_u{
     obj_type_t object_type;
 
@@ -85,9 +99,8 @@ typedef struct object_u{
         textbox_t textbox;
         rect_t rectangle;
         label_t label;
+        button_t button;
     } obj;
-
-    union obj_u * prev;
 
     unsigned char reprint : 1;
 }object_t;
@@ -100,8 +113,10 @@ typedef struct obj_node_s{
 
 typedef struct universe_s{
     coordinate_t size;
+    int num_interactables;
     obj_node_t * objects;
-    obj_node_t *** obj_map;
+    obj_node_t * last_obj;
+    obj_node_t * curr_obj;
 }universe_t;
 
 #endif

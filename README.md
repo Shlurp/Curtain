@@ -1,20 +1,34 @@
 # **CURTAIN**
 
-**This is just a proof of concept, many of the current features will be changed or removed in the future**
+Curtain provides a simple and easy interface for creating Graphical User Interfaces (GUIs) in your terminal.
 
-Curtain provides a simple and easy interface for printing graphics on your terminal. As of now, Curtain provides just three objects that can be printed:
-+ Rectangles - colored rectangles
-+ Labels - colored rectangles with colored "immutable" text (as in, its just a char *, not Curtain's string object).
-+ Textbox - colored rectangles that allow for user-input during runtime. (Text is also colored).
+<br>
 
-Curtain is still far from finished, so hopefully more features will be added in the future (along with an actual README). Curtain still needs to be documented.
-
-At this point in time, Curtain is still slow and only supports printing individual objects in their entirety. This means that creating two objects does not in any way link them to each other or some window/universe. This means that moving objects and overlapping them will be a pain at this point in time.  
-This also means that if one line in a textbox, or any object changes, the whole object needs to be reprinted, instead of just that line.  
-Hopefully these issues will be resolved in the future.
-
+## **What Can Curtain Do?**
 ***
+Curtain can create simple GUIs made out of the following objects:
++ Rectangles - colored rectangles that can be used to create more complicated shapes and backgrounds.
++ Labels - Rectangles with text.
++ Textboxes - boxes that allow the user to easily input data and pass it on to the program.
++ Buttons - boxes (with a label) that allow the user to "click" them and activate some function.
 
-<img src="./data/Curtain.png" width="300px">
+This basically makes Curtain a decent choice for input-heavy projects that don't require a heavy GUI (Curtain doesn't support moving objects).
 
-*A quick demo of Curtain's abilities right now. The source code can be found in [main.c](./src/main.c)*
+### **What Can't Curtain Do?**
+Curtain doesn't support moving (or removing, right now) objects. But it *does* support changing an object's text and color/s.
+
+<br>
+
+## **How Can I Use Curtain?**
+***
+As of now, Curtain is still not in library form as I'm still developing it and too lazy to relearn CMake for compiling the library. Also, I'm much lazy to document my code, so if you want a quick overview of the important functions, take a look at the example code in [main.c](./src/main.c).
+
+<img src="./data/Curtain2.png" width="300px">
+
+*A simple GUI meant to represent a program for sending/receiving messages (something I'm working on and the main reason I made Curtain)*
+
+<br>
+
+<img src="./data/Curtain1.png" width="300px">
+
+*A simple GUI with a textbox, source code in a previous commit*

@@ -119,14 +119,16 @@ int getinput(textbox_t * textbox);
 /**** Object Constructors ****/
 
 object_t * init_label(char * text, coordinate_t start, coordinate_t end, color_t bgcolor, color_t fgcolor);
-object_t *  init_rect(coordinate_t start, coordinate_t end, color_t color);
+object_t * init_rect(coordinate_t start, coordinate_t end, color_t color);
 object_t * init_textbox(coordinate_t start, coordinate_t end, color_t fg_color, color_t bg_color, int enter_char, int (*on_enter)(lines_t *));
+object_t * init_button(char * text, coordinate_t start, coordinate_t end, color_t bgcolor, color_t fgcolor, color_t hover_bgcolor, int (*on_click) (void *));
 
 /**** Printing Functions ****/
 
 int print_rect(rect_t * rect);
 int print_label(label_t * label);
 int print_textbox(textbox_t * textbox);
+int print_button(button_t * button);
 
 static inline int print_obj(object_t * obj){
     int return_value = -1;
@@ -134,6 +136,7 @@ static inline int print_obj(object_t * obj){
         case RECT: return_value = print_rect(&obj->obj.rectangle); break;
         case LABEL: return_value = print_label(&obj->obj.label); break;
         case TEXTBOX: return_value = print_textbox(&obj->obj.textbox); break;
+        case BUTTON: return_value = print_button(&obj->obj.button); break;
         default: errno = EINVAL; break;
     }
 
@@ -146,5 +149,53 @@ int enable_rawmode();
 void view_keypresses();
 void free_obj(object_t * obj);
 int getwinsize(int * rows, int * cols);
+int scan_keypress();
+
+/**** Object Functions ****/
+static inline void change_color(object_t * obj, color_t * bg_color, color_t * fg_color, color_t * hover_color){
+    switch(obj->object_type){
+        case RECT: obj->obj.rectangle.color = *bg_color; break;
+        case LABEL:
+            if(bg_color != NULL){
+                obj->obj.label.bg_color = *bg_color;
+            }
+            if(fg_color != NULL){
+                obj->obj.label.fg_color = *fg_color;
+            }
+            break;
+        case TEXTBOX:
+            if(bg_color != NULL){
+                obj->obj.textbox.bg_color = *bg_color;
+            }
+            if(fg_color != NULL){
+                obj->obj.textbox.fg_color = *fg_color;
+            }
+            break;
+        case BUTTON:
+            if(bg_color != NULL){
+                obj->obj.button.bg_color = *bg_color;
+            }
+            if(fg_color != NULL){
+                obj->obj.button.fg_color = *fg_color;
+            }
+            if(hover_color != NULL){
+                obj->obj.button.hover_bg_color = *hover_color;
+            }
+            break;
+    }   
+
+    obj->reprint = true;
+}
+
+#define is_interactable(object) ((object)->obj->object_type == BUTTON || (object)->obj->object_type == TEXTBOX)
+
+/**** Universe Functions ****/
+
+int init_universe(universe_t * universe);
+int add_object(universe_t * universe, object_t * obj);
+int print_universe(universe_t * universe);
+int run_universe(universe_t * universe);
+void free_universe(universe_t * universe);
+void print_universe_data(universe_t * universe);
 
 #endif

@@ -9,14 +9,14 @@ int init_universe(universe_t * universe){
         goto cleanup;
     }
 
-    universe->obj_map = calloc(universe->size.row, sizeof(obj_node_t *));
+    /*universe->obj_map = calloc(universe->size.row, sizeof(obj_node_t **));
     if(NULL == universe->obj_map){
         error_check = -1;
         goto cleanup;
     }
 
     for(i=0; i<universe->size.row; i++){
-        universe->obj_map[i] = calloc(universe->size.column, sizeof(obj_node_t));
+        universe->obj_map[i] = calloc(universe->size.column, sizeof(obj_node_t *));
         if(NULL == universe->obj_map[i]){
             while(i >= 0){
                 free(universe->obj_map[i]);
@@ -26,9 +26,12 @@ int init_universe(universe_t * universe){
             error_check = -1;
             goto cleanup;
         }
-    }
+    }*/
 
     universe->objects = NULL;
+    universe->last_obj = NULL;
+    universe->curr_obj = NULL;
+    universe->num_interactables = 0;
 
 cleanup:
     return error_check;
@@ -71,11 +74,24 @@ int add_object(universe_t * universe, object_t * obj){
     int j = 0;
     coordinate_t start = {0};
     coordinate_t end = {0};
+    coordinate_t origin = {1, 1};
     obj_node_t * object_node = NULL;
 
     if(object_exists(universe, obj)){
         error_check = -1;
         errno = EEXIST;
+        goto cleanup;
+    }
+
+    switch(obj->object_type){
+        case LABEL: start = obj->obj.label.start; end = obj->obj.label.end; break;
+        case RECT: start = obj->obj.rectangle.start; end = obj->obj.rectangle.end; break;
+        case TEXTBOX: start = obj->obj.textbox.start; end = obj->obj.textbox.end; break;
+        case BUTTON: start = obj->obj.button.start; end = obj->obj.button.end; break;
+    }
+    if(!is_bound_by(origin, universe->size, start) || !is_bound_by(origin, universe->size, end)){
+        error_check = -1;
+        errno = EADDRNOTAVAIL;
         goto cleanup;
     }
 
@@ -87,9 +103,22 @@ int add_object(universe_t * universe, object_t * obj){
     if(universe->objects != NULL){
         universe->objects->prev = object_node;
     }
+    else{
+        universe->curr_obj = object_node;
+        if(BUTTON == universe->curr_obj->obj->object_type){
+            universe->curr_obj->obj->obj.button.hover = true;
+        }
+    }
 
     universe->objects = object_node;
+    if(NULL == universe->last_obj){
+        universe->last_obj = object_node;
+    }
 
+    if(BUTTON == obj->object_type || TEXTBOX == obj->object_type){
+        universe->num_interactables ++;
+    }
+#if 0
     /* Whelp, we're gonna need a lotta nodes, bye bye memory ): 
     I think a 2d array of linked lists is still more efficient than a 3d array though. Maybe it doesn't need to be doubly linked though. */
     switch(obj->object_type){
@@ -111,7 +140,30 @@ int add_object(universe_t * universe, object_t * obj){
             universe->obj_map[i][j] = object_node;
         }
     }
+#endif
 
 cleanup:
     return error_check;
+}
+
+int print_universe(universe_t * universe){
+    int return_value = 0;
+    int error_check = 0;
+    obj_node_t * curr_obj_node = universe->last_obj;
+    
+    while(curr_obj_node != NULL){
+        if(curr_obj_node->obj->reprint){
+            error_check = print_obj(curr_obj_node->obj);
+            if(-1 == error_check){
+                return_value = -1;
+            }
+            else{
+                curr_obj_node->obj->reprint = false;
+            }
+        }
+
+        curr_obj_node = curr_obj_node->prev;
+    }
+
+    return return_value;
 }

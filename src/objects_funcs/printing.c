@@ -80,6 +80,56 @@ cleanup:
     return error_check;
 }
 
+int print_button(button_t * button){
+    int error_check = 0;
+    char * bg = NULL;
+    char newline[C_TINY_BUFFER_SIZE] = {0};
+    int newline_length = 0;
+    int allocated_length = 0;
+    int bg_length = 0;
+    int i = 0;
+    int tlen = strnlen(button->text, C_BUFFER_SIZE);
+    color_t button_color = {0};
+
+    if(button->hover){
+        button_color = button->hover_bg_color;
+    }
+    else{
+        button_color = button->bg_color;
+    }
+
+    newline_length = sprintf(newline, "\e[1B\e[%iD", button->end.column - button->start.column + 1);
+    allocated_length = 60 + (button->end.row - button->start.row + 1) * (button->end.column - button->start.column + 1 + newline_length) - newline_length;
+    bg = malloc(allocated_length);
+    if(NULL == bg){
+        error_check = -1;
+        goto cleanup;
+    }
+
+    memset(bg, ' ', allocated_length);
+    bg_length = sprintf(bg, "\e[%i;%iH\e[48;2;%i;%i;%im\e[38;2;%i;%i;%im", button->start.row, button->start.column, button_color.r, button_color.g, button_color.b, button->fg_color.r, button->fg_color.g, button->fg_color.b);
+
+    for(i=0; i<button->end.row - button->start.row + 1; i++){
+        if(i * (button->end.column - button->start.column + 1) < tlen){
+            memcpy(bg + bg_length, button->text + i * (button->end.column - button->start.column + 1), MIN(button->end.column - button->start.column + 1, tlen - i * (button->end.column - button->start.column + 1)));
+        }
+        bg_length += button->end.column - button->start.column + 1;
+        memcpy(bg+bg_length, newline, newline_length);
+        bg_length += newline_length;
+    }
+
+    memcpy(bg + bg_length, "\e[0m", sizeof("\e[0m")-1);
+    bg_length += sizeof("\e[0m") - 1;
+    error_check = write(STDOUT_FILENO, bg, bg_length);
+
+cleanup:
+    if(bg != NULL){
+        free(bg);
+    }
+
+    return error_check;
+}
+
 int print_textbox(textbox_t * textbox){
     int error_check = 0;
     string_t ** visible = NULL;

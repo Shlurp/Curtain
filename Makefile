@@ -24,7 +24,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(DEPS)
 	$(CC) -c -g $(CFLAGS) $< -o$@
 
 $(PROJECT_NAME): $(OBJ)
-	$(CC) -g $(CFLAGS) $^ -o$@ $(LIBS)
+	$(CC) $(CFLAGS) $^ -o$@ $(LIBS)
 
 clean:
 	rm -r $(OBJ_DIR)/*.o 

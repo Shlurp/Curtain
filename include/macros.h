@@ -32,8 +32,14 @@
 
 #define clearscr write(STDOUT_FILENO, "\e[2J\e[H", sizeof("\e[2J\e[H") - 1)
 #define refreshscr write(STDOUT_FILENO, "\ec", sizeof("\ec") - 1)
+#define hide_cursor write(STDOUT_FILENO, "\e[?25l", sizeof("\e[?25l") - 1)
+#define show_cursor write(STDOUT_FILENO, "\e[?25h", sizeof("\e[?25h") - 1)
 
 #define setcoord(coord, r, c) coord.row = r; coord.column = c
 #define setcolor(c, red, green, blue) c.r = red; c.g = green; c.b = blue
+
+#define is_bound_by(b1, b2, p) ((b1).column <= (p).column && (p).column <= (b2).column && (b1).row <= (p).row && (p).row <= (b2).row)
+
+#define mssleep(s) usleep((s) * 1000)
 
 #endif
