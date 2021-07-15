@@ -209,6 +209,8 @@ static inline void change_color(object_t * obj, color_t * bg_color, color_t * fg
     obj->reprint = true;
 }
 
+int move_obj(universe_t * universe, object_t * object, coordinate_t move);
+
 #define is_interactable(object_node) ((object_node)->obj->object_type == BUTTON || (object_node)->obj->object_type == TEXTBOX)
 
 #define getcoords(obj, start, end) switch(obj->object_type){ \
@@ -220,6 +222,7 @@ static inline void change_color(object_t * obj, color_t * bg_color, color_t * fg
 
 /**** Universe Functions ****/
 
+bool object_exists(universe_t * universe, object_t * obj);
 int init_universe(universe_t * universe);
 int add_object(universe_t * universe, object_t * obj);
 int print_universe(universe_t * universe, bool print_all);
