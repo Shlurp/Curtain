@@ -60,6 +60,7 @@ int main(){
     add_object(&universe, textbox);
     add_object(&universe, button);
     
+    quick_remove(&universe, title, fg_color);
     /* Running the universe - once this is run, everything is out of the programmer's hands. The user can move between "interactables" - 
        buttons and textboxes and put in input */
     run_universe(&universe);

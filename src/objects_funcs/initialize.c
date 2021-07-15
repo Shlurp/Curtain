@@ -84,7 +84,7 @@ cleanup:
     return textbox;
 }
 
-object_t * init_button(char * text, coordinate_t start, coordinate_t end, color_t bgcolor, color_t fgcolor, color_t hover_bgcolor, int (*on_click) (void *)){
+object_t * init_button(char * text, coordinate_t start, coordinate_t end, color_t bgcolor, color_t fgcolor, color_t hover_bgcolor, int (*on_click) (universe_t *, void *)){
     object_t * button = NULL;
     int tlen = 0;
 

@@ -23,6 +23,11 @@ Curtain doesn't support moving (or removing, right now) objects. But it *does* s
 ***
 As of now, Curtain is still not in library form as I'm still developing it and too lazy to relearn CMake for compiling the library. Also, I'm much lazy to document my code, so if you want a quick overview of the important functions, take a look at the example code in [main.c](./src/main.c).
 
+<br>
+
+## **Gallery**
+***
+
 <img src="./data/Curtain2.png" width="300px">
 
 *A simple GUI meant to represent a program for sending/receiving messages (something I'm working on and the main reason I made Curtain)*

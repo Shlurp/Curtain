@@ -32,6 +32,28 @@ void next_obj(universe_t * universe){
     }
 }
 
+int print_universe(universe_t * universe, bool print_all){
+    int return_value = 0;
+    int error_check = 0;
+    obj_node_t * curr_obj_node = universe->last_obj;
+    
+    while(curr_obj_node != NULL){
+        if(print_all || curr_obj_node->obj->reprint){
+            error_check = print_obj(curr_obj_node->obj);
+            if(-1 == error_check){
+                return_value = -1;
+            }
+            else{
+                curr_obj_node->obj->reprint = false;
+            }
+        }
+
+        curr_obj_node = curr_obj_node->prev;
+    }
+
+    return return_value;
+}
+
 int run_universe(universe_t * universe){
     int error_check = 0;
     char input = 0;
@@ -43,8 +65,7 @@ int run_universe(universe_t * universe){
     hide_cursor;
 
     while(true){
-        error_check = print_universe(universe);
-        
+        error_check = print_universe(universe, universe->dirty);
         if(-1 == error_check){
             error_label = make_error_label(universe->size);
             if(error_check != -1){
@@ -53,6 +74,7 @@ int run_universe(universe_t * universe){
 
             goto cleanup;
         }
+        universe->dirty = false;
 
         if(universe->curr_obj != NULL && TEXTBOX == universe->curr_obj->obj->object_type){
             error_check = sprintf(buf, "\e[%i;%iH", universe->curr_obj->obj->obj.textbox.start.row, universe->curr_obj->obj->obj.textbox.start.column);
@@ -80,7 +102,7 @@ int run_universe(universe_t * universe){
                     }
                 }
                 else if(BUTTON == universe->curr_obj->obj->object_type && universe->curr_obj->obj->obj.button.on_click != NULL){
-                    error_check = universe->curr_obj->obj->obj.button.on_click(NULL);
+                    error_check = universe->curr_obj->obj->obj.button.on_click(universe, NULL);
                     if(-1 == error_check){
                          error_label = make_error_label(universe->size);
                         if(error_check != -1){
@@ -103,3 +125,23 @@ cleanup:
 
     return error_check;
 }
+
+int quick_remove(universe_t * universe, object_t * obj, color_t color){
+    int error_check = 0;
+    coordinate_t start = {0};
+    coordinate_t end = {0};
+
+    getcoords(obj, start, end);
+
+    error_check = remove_object(universe, obj);
+    if(false == error_check){
+        error_check = -1;
+        goto cleanup;
+    }
+
+    error_check = erase_area(start, end, color);
+
+cleanup:
+    return error_check;
+}
+

@@ -78,6 +78,8 @@ typedef struct textbox_s{
     unsigned char position_change : 1;
 }textbox_t;
 
+typedef struct universe_s universe_t;
+
 typedef struct button_s{
     color_t bg_color;
     color_t hover_bg_color;
@@ -89,7 +91,7 @@ typedef struct button_s{
     bool hover;
     char * text;
 
-    int (*on_click)(void *);
+    int (*on_click)(universe_t *, void *);
 }button_t;
 
 typedef struct object_u{
@@ -111,12 +113,14 @@ typedef struct obj_node_s{
     struct obj_node_s * prev;
 }obj_node_t;
 
-typedef struct universe_s{
+struct universe_s{
     coordinate_t size;
     int num_interactables;
     obj_node_t * objects;
     obj_node_t * last_obj;
     obj_node_t * curr_obj;
-}universe_t;
+
+    unsigned char dirty : 1;
+};
 
 #endif

@@ -121,7 +121,11 @@ int getinput(textbox_t * textbox);
 object_t * init_label(char * text, coordinate_t start, coordinate_t end, color_t bgcolor, color_t fgcolor);
 object_t * init_rect(coordinate_t start, coordinate_t end, color_t color);
 object_t * init_textbox(coordinate_t start, coordinate_t end, color_t fg_color, color_t bg_color, int enter_char, int (*on_enter)(lines_t *));
-object_t * init_button(char * text, coordinate_t start, coordinate_t end, color_t bgcolor, color_t fgcolor, color_t hover_bgcolor, int (*on_click) (void *));
+object_t * init_button(char * text, coordinate_t start, coordinate_t end, color_t bgcolor, color_t fgcolor, color_t hover_bgcolor, int (*on_click) (universe_t *, void *));
+
+/**** Object Destructor ****/
+
+void free_obj(object_t * obj);
 
 /**** Printing Functions ****/
 
@@ -129,6 +133,7 @@ int print_rect(rect_t * rect);
 int print_label(label_t * label);
 int print_textbox(textbox_t * textbox);
 int print_button(button_t * button);
+int quick_remove(universe_t * universe, object_t * obj, color_t color);
 
 static inline int print_obj(object_t * obj){
     int return_value = -1;
@@ -143,15 +148,32 @@ static inline int print_obj(object_t * obj){
     return return_value;
 }
 
+static inline int erase_area(coordinate_t start, coordinate_t end, color_t color){
+    object_t * rect = NULL;
+    int error_check = 0;
+
+    rect = init_rect(start, end, color);
+    if(-1 == error_check){
+        goto cleanup;
+    }
+
+    error_check = print_obj(rect);
+
+    free_obj(rect);
+
+cleanup:
+    return error_check;
+}
+
 /**** Miscellaneous functions ****/
 
 int enable_rawmode();
 void view_keypresses();
-void free_obj(object_t * obj);
 int getwinsize(int * rows, int * cols);
 int scan_keypress();
 
 /**** Object Functions ****/
+
 static inline void change_color(object_t * obj, color_t * bg_color, color_t * fg_color, color_t * hover_color){
     switch(obj->object_type){
         case RECT: obj->obj.rectangle.color = *bg_color; break;
@@ -187,15 +209,23 @@ static inline void change_color(object_t * obj, color_t * bg_color, color_t * fg
     obj->reprint = true;
 }
 
-#define is_interactable(object) ((object)->obj->object_type == BUTTON || (object)->obj->object_type == TEXTBOX)
+#define is_interactable(object_node) ((object_node)->obj->object_type == BUTTON || (object_node)->obj->object_type == TEXTBOX)
+
+#define getcoords(obj, start, end) switch(obj->object_type){ \
+        case LABEL: start = obj->obj.label.start; end = obj->obj.label.end; break; \
+        case RECT: start = obj->obj.rectangle.start; end = obj->obj.rectangle.end; break; \
+        case TEXTBOX: start = obj->obj.textbox.start; end = obj->obj.textbox.end; break; \
+        case BUTTON: start = obj->obj.button.start; end = obj->obj.button.end; break; \
+    }
 
 /**** Universe Functions ****/
 
 int init_universe(universe_t * universe);
 int add_object(universe_t * universe, object_t * obj);
-int print_universe(universe_t * universe);
+int print_universe(universe_t * universe, bool print_all);
 int run_universe(universe_t * universe);
 void free_universe(universe_t * universe);
 void print_universe_data(universe_t * universe);
+bool remove_object(universe_t * universe, object_t * object);
 
 #endif

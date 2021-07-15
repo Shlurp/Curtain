@@ -32,6 +32,7 @@ int init_universe(universe_t * universe){
     universe->last_obj = NULL;
     universe->curr_obj = NULL;
     universe->num_interactables = 0;
+    universe->dirty = 0;
 
 cleanup:
     return error_check;
@@ -83,12 +84,8 @@ int add_object(universe_t * universe, object_t * obj){
         goto cleanup;
     }
 
-    switch(obj->object_type){
-        case LABEL: start = obj->obj.label.start; end = obj->obj.label.end; break;
-        case RECT: start = obj->obj.rectangle.start; end = obj->obj.rectangle.end; break;
-        case TEXTBOX: start = obj->obj.textbox.start; end = obj->obj.textbox.end; break;
-        case BUTTON: start = obj->obj.button.start; end = obj->obj.button.end; break;
-    }
+    getcoords(obj, start, end);
+
     if(!is_bound_by(origin, universe->size, start) || !is_bound_by(origin, universe->size, end)){
         error_check = -1;
         errno = EADDRNOTAVAIL;
@@ -146,24 +143,49 @@ cleanup:
     return error_check;
 }
 
-int print_universe(universe_t * universe){
-    int return_value = 0;
-    int error_check = 0;
-    obj_node_t * curr_obj_node = universe->last_obj;
-    
-    while(curr_obj_node != NULL){
-        if(curr_obj_node->obj->reprint){
-            error_check = print_obj(curr_obj_node->obj);
-            if(-1 == error_check){
-                return_value = -1;
+bool remove_object(universe_t * universe, object_t * object){
+    obj_node_t * curr_node = universe->objects;
+    bool found = false;
+
+    while(curr_node != NULL){
+        if(curr_node->obj == object){
+            if(curr_node->prev != NULL){
+                curr_node->prev->next = curr_node->next;
             }
             else{
-                curr_obj_node->obj->reprint = false;
+                universe->objects = curr_node->next;
             }
-        }
 
-        curr_obj_node = curr_obj_node->prev;
+            if(curr_node->next != NULL){
+                curr_node->next->prev = curr_node->prev;
+            }
+            else{
+                universe->last_obj = curr_node->prev;
+            }
+
+            if(curr_node == universe->curr_obj){
+                if(curr_node->prev != NULL){
+                    universe->curr_obj = curr_node->prev;
+                }
+                else{
+                    universe->curr_obj = curr_node->next;
+                }
+            }
+
+            if(is_interactable(curr_node)){
+                universe->num_interactables --;
+            }
+
+            free_obj(curr_node->obj);
+            free(curr_node);
+            curr_node = NULL;
+
+            found = true;
+        }
+        else{
+            curr_node = curr_node->next;
+        }
     }
 
-    return return_value;
+    return found;
 }
