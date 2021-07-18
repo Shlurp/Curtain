@@ -1,11 +1,19 @@
 #include "curtain.h"
 
-int init_universe(universe_t * universe){
+universe_t * init_universe(){
+    universe_t * universe = NULL;
     int error_check = 0;
     int i = 0;
 
+    universe = calloc(sizeof(universe_t), 1);
+    if(NULL == universe){
+        goto cleanup;
+    }
+
     error_check = getwinsize(&universe->size.row, &universe->size.column);
     if(-1 == error_check){
+        free(universe);
+        universe = NULL;
         goto cleanup;
     }
 
@@ -26,16 +34,16 @@ int init_universe(universe_t * universe){
             error_check = -1;
             goto cleanup;
         }
-    }*/
+    }
 
     universe->objects = NULL;
     universe->last_obj = NULL;
     universe->curr_obj = NULL;
     universe->num_interactables = 0;
-    universe->dirty = 0;
+    universe->dirty = 0;*/
 
 cleanup:
-    return error_check;
+    return universe;
 }
 
 bool object_exists(universe_t * universe, object_t * obj){

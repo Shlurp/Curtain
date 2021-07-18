@@ -5,9 +5,30 @@
 #include <stdlib.h>
 #include <errno.h>
 
+#ifndef IN
+    #define IN
+#endif
+#ifndef OUT
+    #define OUT
+#endif
+
 /**** String functions ****/
 
+/**
+ * @brief: Initializes a string
+ * @param{OUT} string: String to initialize
+ * 
+ * @returns: 0 on success, else -1 and errno is set (by calloc)
+ */
 int init_string(string_t * string);
+/**
+ * @brief: Shifts a string
+ * @param{IN} index: Index to start shifting at
+ * @param{IN} amount: Amount to shift (negative for left shifting)
+ * @param{OUT} string: String to shift
+ * 
+ * @returns: 0 on success, else -1 (and errno set)
+ */
 int shift_string(int index, int amount, string_t * string);
 int insert_char(char c, int index, string_t * string);
 int append_char(char c, string_t * string);
@@ -120,7 +141,7 @@ int getinput(textbox_t * textbox);
 
 object_t * init_label(char * text, coordinate_t start, coordinate_t end, color_t bgcolor, color_t fgcolor);
 object_t * init_rect(coordinate_t start, coordinate_t end, color_t color);
-object_t * init_textbox(coordinate_t start, coordinate_t end, color_t fg_color, color_t bg_color, int enter_char, int (*on_enter)(lines_t *));
+object_t * init_textbox(coordinate_t start, coordinate_t end, color_t fg_color, color_t bg_color, int enter_char, int (*on_enter)(lines_t *, void *));
 object_t * init_button(char * text, coordinate_t start, coordinate_t end, color_t bgcolor, color_t fgcolor, color_t hover_bgcolor, int (*on_click) (universe_t *, void *));
 
 /**** Object Destructor ****/
@@ -223,7 +244,7 @@ int move_obj(universe_t * universe, object_t * object, coordinate_t move);
 /**** Universe Functions ****/
 
 bool object_exists(universe_t * universe, object_t * obj);
-int init_universe(universe_t * universe);
+universe_t * init_universe();
 int add_object(universe_t * universe, object_t * obj);
 int print_universe(universe_t * universe, bool print_all);
 int run_universe(universe_t * universe);

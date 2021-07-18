@@ -1,11 +1,5 @@
 #include "curtain.h"
 
-/**
- * @brief: Initializes a string
- * @param{OUT} string: String to initialize
- * 
- * @returns: 0 on success, else -1 and errno is set (by calloc)
- */
 int init_string(OUT string_t * string){
     int error_check = 0;
 

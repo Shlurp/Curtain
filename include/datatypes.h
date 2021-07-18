@@ -73,9 +73,7 @@ typedef struct textbox_s{
 
     lines_t * lines;
     int enter_char;
-    int (*on_enter)(lines_t *);
-
-    unsigned char position_change : 1;
+    int (*on_enter)(lines_t *, void *);
 }textbox_t;
 
 typedef struct universe_s universe_t;

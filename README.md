@@ -37,3 +37,35 @@ As of now, Curtain is still not in library form as I'm still developing it and t
 <img src="./data/Curtain1.png" width="300px">
 
 *A simple GUI with a textbox, source code in a previous commit*
+
+## **Downloading and Building**
++ Download the Git repository:
+    1. Open your terminal and navigate to the directory you want to clone the repository (directory) into.  
+    For instance, your home directory:
+        ```bash
+        $cd ~
+        ```
+
+    2. Clone the repository:
+        ```bash
+        $git clone https://github.com/Shlurp/Curtain
+        ```
+    
+    3. Navigate into the repository:
+        ```bash
+        $cd Curtain
+        ```
+
++ Build the library:
+    1. Make the build directory and navigate into it:
+        ```bash
+        $mkdir build && cd build
+        ```
+    2. Run cmake:
+        ```bash
+        $cmake ..
+        ```
+    3. Run the makefile:
+        ```bash
+        $make
+        ```

@@ -12,7 +12,7 @@ int getinput(textbox_t * textbox){
 
         input = scan_keypress();
         if(input == textbox->enter_char){
-            error_check = textbox->on_enter(lines);
+            error_check = textbox->on_enter(lines, NULL);
             if(-1 == error_check || 0 == error_check){
                 goto cleanup;
             }
@@ -52,7 +52,7 @@ int getinput(textbox_t * textbox){
                     break;
                 case '\b': remove_char_from_line(lines); break;
                 case 127: remove_char_from_line(lines); break;
-                case 3: goto cleanup;
+                case 27: case 3: goto cleanup;
                 default: break;
             }
         }

@@ -1,12 +1,6 @@
 #ifndef CURTAIN_H_MACROS
 #define CURTAIN_H_MACROS
 
-#ifndef IN
-    #define IN
-#endif
-#ifndef OUT
-    #define OUT
-#endif
 #ifndef DEBUG
     #define DEBUG puts("\e[31;1mDEBUG\e[0m")
 #endif
@@ -35,8 +29,8 @@
 #define hide_cursor write(STDOUT_FILENO, "\e[?25l", sizeof("\e[?25l") - 1)
 #define show_cursor write(STDOUT_FILENO, "\e[?25h", sizeof("\e[?25h") - 1)
 
-#define setcoord(coord, r, c) coord.row = r; coord.column = c
-#define setcolor(c, red, green, blue) c.r = red; c.g = green; c.b = blue
+#define setcoord(coord, r, c) (coord).row = (r); (coord).column = (c)
+#define setcolor(c, red, green, blue) (c).r = (red); (c).g = (green); (c).b = (blue)
 
 #define is_bound_by(b1, b2, p) ((b1).column <= (p).column && (p).column <= (b2).column && (b1).row <= (p).row && (p).row <= (b2).row)
 

@@ -1,6 +1,7 @@
 #include "curtain.h"
 
 int main(){
+    #if 0
     /** 
      * Making a simple (not yet working) GUI for a communication program 
      * This obviously needs error-checking, but it gets the point across (probably)
@@ -20,7 +21,7 @@ int main(){
     object_t * button = NULL;
 
     /* The universe, the struct with all of the data for the curtain enviornment */
-    universe_t universe = {0};
+    universe_t * universe = NULL;
     
     /* Set the coordinates using the setcoord macro (it's pretty self-explanatory) */
     setcoord(start, 1, 1);
@@ -52,21 +53,24 @@ int main(){
     title = init_label(" Curtain - GUI designer", start, end, bg_color, fg_color);
 
     /* Initialize the universe, nothing interesting happens here other than getting the window size really */
-    init_universe(&universe);
+    universe = init_universe();
 
     /* Adding all of the objects to the universe */
-    add_object(&universe, bg);
-    add_object(&universe, title);
-    add_object(&universe, textbox);
-    add_object(&universe, button);
+    add_object(universe, bg);
+    add_object(universe, title);
+    add_object(universe, textbox);
+    add_object(universe, button);
     
-    quick_remove(&universe, title, fg_color);
+    quick_remove(universe, title, fg_color);
     /* Running the universe - once this is run, everything is out of the programmer's hands. The user can move between "interactables" - 
        buttons and textboxes and put in input */
-    run_universe(&universe);
+    run_universe(universe);
 
     /* Free the universe after finishing */
-    free_universe(&universe);
+    free_universe(universe);
 
     exit(0);
+    #endif
+
+    view_keypresses();
 }

@@ -49,7 +49,7 @@ cleanup:
     return rectangle;
 }
 
-object_t * init_textbox(coordinate_t start, coordinate_t end, color_t fg_color, color_t bg_color, int enter_char, int (*on_enter)(lines_t *)){
+object_t * init_textbox(coordinate_t start, coordinate_t end, color_t fg_color, color_t bg_color, int enter_char, int (*on_enter)(lines_t *, void *)){
     object_t * textbox = NULL;
     int error_check = 0;
 
