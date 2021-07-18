@@ -1,7 +1,6 @@
 #include "curtain.h"
 
 int main(){
-    #if 0
     /** 
      * Making a simple (not yet working) GUI for a communication program 
      * This obviously needs error-checking, but it gets the point across (probably)
@@ -70,7 +69,4 @@ int main(){
     free_universe(universe);
 
     exit(0);
-    #endif
-
-    view_keypresses();
 }
