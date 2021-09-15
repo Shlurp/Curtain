@@ -12,6 +12,11 @@ int getinput(textbox_t * textbox){
 
         input = scan_keypress();
         if(input == textbox->enter_char){
+            if(NULL == textbox->on_enter){
+                error_check = 0;
+                goto cleanup;
+            }
+            
             error_check = textbox->on_enter(lines, NULL);
             if(-1 == error_check || 0 == error_check){
                 goto cleanup;
