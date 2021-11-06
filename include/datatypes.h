@@ -64,6 +64,9 @@ typedef struct rect_s{
     coordinate_t end;
 }rect_t;
 
+typedef struct object_s object_t;
+typedef struct universe_s universe_t;
+
 typedef struct textbox_s{
     color_t bg_color;
     color_t fg_color;
@@ -71,12 +74,13 @@ typedef struct textbox_s{
     coordinate_t start;
     coordinate_t end;
 
+    int num_objs;
+    object_t ** objs;
+    void * args;
     lines_t * lines;
     int enter_char;
-    int (*on_enter)(lines_t *, void *);
+    int (*on_enter)(lines_t *, int, object_t **, void *);
 }textbox_t;
-
-typedef struct universe_s universe_t;
 
 typedef struct button_s{
     color_t bg_color;
@@ -89,10 +93,13 @@ typedef struct button_s{
     bool hover;
     char * text;
 
-    int (*on_click)(universe_t *, void *);
+    int num_objs;
+    object_t ** objs;
+    void * args;
+    int (*on_click)(universe_t *, int, object_t **, void *);
 }button_t;
 
-typedef struct object_u{
+struct object_s{
     obj_type_t object_type;
 
     union obj_u{
@@ -103,7 +110,7 @@ typedef struct object_u{
     } obj;
 
     unsigned char reprint : 1;
-}object_t;
+};
 
 typedef struct obj_node_s{
     object_t * obj;

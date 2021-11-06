@@ -34,7 +34,7 @@ int main(){
     setcoord(start, 20, 2);
     setcoord(end, 29, 48);
     setcolor(bg_color, 0, 200, 0);
-    textbox = init_textbox(start, end, fg_color, bg_color, -1, NULL);
+    textbox = init_textbox(start, end, fg_color, bg_color, -1, NULL, NULL, 0);
 
     /* Create the "Send" button. The hover_color is the color of the button when the user hovers over it */
     setcoord(start, 20, 50);
@@ -42,7 +42,7 @@ int main(){
     setcolor(bg_color, 100, 100, 100);
     setcolor(fg_color, 255, 255, 255);
     setcolor(hover_color, 150, 150, 150);
-    button = init_button("Send", start, end, bg_color, fg_color, hover_color, NULL);
+    button = init_button("Send", start, end, bg_color, fg_color, hover_color, NULL, NULL, 0);
 
     /* Create the title - basically a rectangle with text */
     setcoord(start, 2, 16);

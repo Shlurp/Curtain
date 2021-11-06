@@ -49,7 +49,7 @@ int print_label(label_t * label){
     int tlen = strnlen(label->text, C_BUFFER_SIZE);
 
     newline_length = sprintf(newline, "\e[1B\e[%iD", label->end.column - label->start.column + 1);
-    allocated_length = 50 + (label->end.row - label->start.row + 1) * (label->end.column - label->start.column + 1 + newline_length) - newline_length;
+    allocated_length = 52 + (label->end.row - label->start.row + 1) * (label->end.column - label->start.column + 1 + newline_length) - newline_length;
     bg = malloc(allocated_length);
     if(NULL == bg){
         error_check = -1;

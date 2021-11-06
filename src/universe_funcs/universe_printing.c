@@ -36,7 +36,7 @@ int print_universe(universe_t * universe, bool print_all){
     int return_value = 0;
     int error_check = 0;
     obj_node_t * curr_obj_node = universe->last_obj;
-    
+
     while(curr_obj_node != NULL){
         if(print_all || curr_obj_node->obj->reprint){
             error_check = print_obj(curr_obj_node->obj);
@@ -100,15 +100,21 @@ int run_universe(universe_t * universe){
 
                         goto cleanup;
                     }
+                    if(1 == error_check){
+                        goto cleanup;
+                    }
                 }
                 else if(BUTTON == universe->curr_obj->obj->object_type && universe->curr_obj->obj->obj.button.on_click != NULL){
-                    error_check = universe->curr_obj->obj->obj.button.on_click(universe, NULL);
+                    error_check = universe->curr_obj->obj->obj.button.on_click(universe, universe->curr_obj->obj->obj.button.num_objs, universe->curr_obj->obj->obj.button.objs, universe->curr_obj->obj->obj.button.args);
                     if(-1 == error_check){
-                         error_label = make_error_label(universe->size);
+                        error_label = make_error_label(universe->size);
                         if(error_check != -1){
                             print_obj(error_label);
                         }
 
+                        goto cleanup;
+                    }
+                    if(1 == error_check){
                         goto cleanup;
                     }
                 }

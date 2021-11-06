@@ -49,9 +49,11 @@ cleanup:
     return rectangle;
 }
 
-object_t * init_textbox(coordinate_t start, coordinate_t end, color_t fg_color, color_t bg_color, int enter_char, int (*on_enter)(lines_t *, void *)){
+object_t * init_textbox(coordinate_t start, coordinate_t end, color_t fg_color, color_t bg_color, int enter_char, int (*on_enter)(lines_t *, int, object_t **, void *), void * args, int num_objs, ...){
     object_t * textbox = NULL;
     int error_check = 0;
+    int i = 0;
+    va_list ap = {0};
 
     textbox = malloc(sizeof(object_t));
     if(NULL == textbox){
@@ -67,15 +69,35 @@ object_t * init_textbox(coordinate_t start, coordinate_t end, color_t fg_color, 
 
     textbox->obj.textbox.lines = malloc(sizeof(lines_t));
     if(NULL == textbox->obj.textbox.lines){
+        puts("Malloc error");
+        free(textbox);
+        textbox = NULL;
         goto cleanup;
     }
 
     error_check = init_lines(textbox->obj.textbox.lines, (end.row - start.row - 1) / 2, end.row - start.row, end.column - start.column + 1);
     if(-1 == error_check){
+        puts("Init lines error");
         free(textbox);
         textbox = NULL;
         goto cleanup;
     }
+
+    textbox->obj.textbox.args = args;
+    textbox->obj.textbox.num_objs = num_objs;
+    textbox->obj.textbox.objs = calloc(num_objs, sizeof(object_t *));
+    if(NULL == textbox->obj.textbox.objs){
+        puts("calloc error");
+        free(textbox);
+        textbox = NULL;
+        goto cleanup;
+    }
+
+    va_start(ap, num_objs);
+    for(i=0; i<num_objs; i++){
+        textbox->obj.textbox.objs[i] = va_arg(ap, object_t *);
+    }
+    va_end(ap);
 
     textbox->object_type = TEXTBOX;
     textbox->reprint = true;
@@ -84,9 +106,11 @@ cleanup:
     return textbox;
 }
 
-object_t * init_button(char * text, coordinate_t start, coordinate_t end, color_t bgcolor, color_t fgcolor, color_t hover_bgcolor, int (*on_click) (universe_t *, void *)){
+object_t * init_button(char * text, coordinate_t start, coordinate_t end, color_t bgcolor, color_t fgcolor, color_t hover_bgcolor, int (*on_click) (universe_t *, int, object_t **, void *), void * args, int num_objs, ...){
     object_t * button = NULL;
     int tlen = 0;
+    int i = 0;
+    va_list ap = {0};
 
     button = malloc(sizeof(object_t));
     if(NULL == button){
@@ -109,6 +133,21 @@ object_t * init_button(char * text, coordinate_t start, coordinate_t end, color_
         goto cleanup;
     }
     memcpy(button->obj.button.text, text, tlen+1);
+
+    button->obj.button.args = args;
+    button->obj.button.num_objs = num_objs;
+    button->obj.button.objs = calloc(num_objs, sizeof(object_t *));
+    if(NULL == button->obj.button.objs){
+        free(button);
+        button = NULL;
+        goto cleanup;
+    }
+
+    va_start(ap, num_objs);
+    for(i=0; i<num_objs; i++){
+        button->obj.button.objs[i] = va_arg(ap, object_t *);
+    }
+    va_end(ap);
 
     button->object_type = BUTTON;
     button->reprint = true;

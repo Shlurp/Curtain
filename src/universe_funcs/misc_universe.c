@@ -10,6 +10,8 @@ void free_universe(universe_t * universe){
         free(curr_node);
         curr_node = next_node;
     }
+    
+    free(universe);
 }
 
 void print_universe_data(universe_t * universe){

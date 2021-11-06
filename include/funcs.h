@@ -141,8 +141,8 @@ int getinput(textbox_t * textbox);
 
 object_t * init_label(char * text, coordinate_t start, coordinate_t end, color_t bgcolor, color_t fgcolor);
 object_t * init_rect(coordinate_t start, coordinate_t end, color_t color);
-object_t * init_textbox(coordinate_t start, coordinate_t end, color_t fg_color, color_t bg_color, int enter_char, int (*on_enter)(lines_t *, void *));
-object_t * init_button(char * text, coordinate_t start, coordinate_t end, color_t bgcolor, color_t fgcolor, color_t hover_bgcolor, int (*on_click) (universe_t *, void *));
+object_t * init_textbox(coordinate_t start, coordinate_t end, color_t fg_color, color_t bg_color, int enter_char, int (*on_enter)(lines_t *, int, object_t **, void *), void * args, int num_objs, ...);
+object_t * init_button(char * text, coordinate_t start, coordinate_t end, color_t bgcolor, color_t fgcolor, color_t hover_bgcolor, int (*on_click) (universe_t *, int, object_t **, void *), void * args, int num_objs, ...);
 
 /**** Object Destructor ****/
 

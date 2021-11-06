@@ -17,8 +17,8 @@ int getinput(textbox_t * textbox){
                 goto cleanup;
             }
             
-            error_check = textbox->on_enter(lines, NULL);
-            if(-1 == error_check || 0 == error_check){
+            error_check = textbox->on_enter(lines, textbox->num_objs, textbox->objs, textbox->args);
+            if(-1 == error_check || 0 == error_check || 1 == error_check){
                 goto cleanup;
             }
         }
@@ -63,7 +63,8 @@ int getinput(textbox_t * textbox){
         }
     }
 
-
+    error_check = 0;
+    
 cleanup:
     hide_cursor;
     return error_check;

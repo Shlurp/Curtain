@@ -3,8 +3,19 @@
 void free_obj(object_t * obj){
     switch(obj->object_type){
         case LABEL: free(obj->obj.label.text); break;
-        case TEXTBOX: free_lines(obj->obj.textbox.lines); free(obj->obj.textbox.lines); break;
-        case BUTTON: free(obj->obj.button.text); break;
+        case TEXTBOX: 
+            free_lines(obj->obj.textbox.lines); 
+            free(obj->obj.textbox.lines); 
+            if(obj->obj.textbox.objs != NULL){
+                free(obj->obj.textbox.objs); 
+            }
+            break;
+        case BUTTON: 
+            free(obj->obj.button.text); 
+            if(obj->obj.button.objs != NULL){
+                free(obj->obj.button.objs);
+            }
+            break;
         default: break;
     }
 
