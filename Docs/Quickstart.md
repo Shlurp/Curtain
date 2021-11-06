@@ -1,5 +1,7 @@
 # **Curtain - Quickstart**
 
+## **This is outdated and needs a rewrite**
+
 Curtain, as a library for quickly creating GUIs provides many methods of creating such. This tutorial will provide you with the basic knowledge of how to use Curtain in a high-level view. While Curtain itself isn't especially complicated, this tutorial will not delve far into its internals.
 
 ***
